@@ -763,7 +763,7 @@ $.imgAreaSelect = function (img, options) {
             onSelectEnd: function () {}
         }, options));
 
-        $box.add($outer).css({ visibility: '' });
+        $box.add($outer).css({ visibility: '' , position: ($parent[0].tagName !== 'BODY'? 'absolute' : undefined) });
         
         if (options.show) {
             shown = true;

@@ -717,14 +717,17 @@ $.imgAreaSelect = function (img, options) {
     function cancelSelection() {
         $(document).unbind('mousemove', startSelection)
             .unbind('mouseup', cancelSelection);
-        hide($box.add($outer));
         
-        setSelection(selX(x1), selY(y1), selX(x1), selY(y1));
-        
-        /* If this is an API call, callback functions should not be triggered */
-        if (!(this instanceof $.imgAreaSelect)) {
-            options.onSelectChange(img, getSelection());
-            options.onSelectEnd(img, getSelection());
+        if (!options.disableCancelSelection) {
+            hide($box.add($outer));
+            
+            setSelection(selX(x1), selY(y1), selX(x1), selY(y1));
+            
+            /* If this is an API call, callback functions should not be triggered */
+            if (!(this instanceof $.imgAreaSelect)) {
+                options.onSelectChange(img, getSelection());
+                options.onSelectEnd(img, getSelection());
+            }
         }
     }
 

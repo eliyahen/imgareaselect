@@ -308,8 +308,13 @@ $.imgAreaSelect = function (img, options) {
          * Check if selection area is within image boundaries, adjust if
          * necessary
          */
-        if (selection.x2 > imgWidth || selection.y2 > imgHeight)
+        if (selection.x2 > imgWidth || selection.y2 > imgHeight) {
+            x1 = min(max(x1, left), left + imgWidth);
+            y1 = min(max(y1, top), top + imgHeight);
+            x2 = x1 + selection.x2;
+            y2 = y1 + selection.y2;
             doResize();
+        }
     }
 
     /**
@@ -570,27 +575,35 @@ $.imgAreaSelect = function (img, options) {
          * image boundaries (it might not if the image source was dynamically
          * changed).
          */
-        x1 = min(x1, left + imgWidth);
-        y1 = min(y1, top + imgHeight);
+        x1 = min(max(x1, left), left + imgWidth);
+        y1 = min(max(y1, top), top + imgHeight);
         
         if (abs(x2 - x1) < minWidth) {
             /* Selection width is smaller than minWidth */
             x2 = x1 - minWidth * (x2 < x1 || -1);
 
-            if (x2 < left)
-                x1 = left + minWidth;
-            else if (x2 > left + imgWidth)
-                x1 = left + imgWidth - minWidth;
+            if (x2 < left) {
+                x1 = min(left + imgWidth, left + minWidth);
+                x2 = left;
+            }
+            else if (x2 > left + imgWidth) {
+                x1 = max(left, left + imgWidth - minWidth);
+                x2 = left + imgWidth;
+            }
         }
 
         if (abs(y2 - y1) < minHeight) {
             /* Selection height is smaller than minHeight */
             y2 = y1 - minHeight * (y2 < y1 || -1);
 
-            if (y2 < top)
-                y1 = top + minHeight;
-            else if (y2 > top + imgHeight)
-                y1 = top + imgHeight - minHeight;
+            if (y2 < top) {
+                y1 = min(top + imgHeight, top + minHeight);
+                y2 = top;
+            }
+            else if (y2 > top + imgHeight) {
+                y1 = max(top, top + imgHeight - minHeight);
+                y2 = top + imgHeight;
+            }
         }
 
         x2 = max(left, min(x2, left + imgWidth));
